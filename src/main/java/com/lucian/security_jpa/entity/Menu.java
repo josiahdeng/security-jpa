@@ -12,9 +12,11 @@ public class Menu {
     @Column(name = "pattern")
     private String pattern;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "menu_role", joinColumns = @JoinColumn(name = "menu_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"))
+                inverseJoinColumns = @JoinColumn(name = "role_id"),
+            foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+            inverseForeignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<Role> roles;
 
     public Integer getId() {

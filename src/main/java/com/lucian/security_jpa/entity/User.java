@@ -28,9 +28,11 @@ public class User implements UserDetails {
     @Column(name = "locked")
     private Boolean locked;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"))
+                inverseJoinColumns = @JoinColumn(name = "role_id"),
+                inverseForeignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+                foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<Role> roles;
 
 
