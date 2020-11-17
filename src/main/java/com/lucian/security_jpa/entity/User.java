@@ -32,7 +32,8 @@ public class User implements UserDetails {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id"),
                 inverseForeignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
-                foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+                foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+                indexes = {@Index(name = "user_id", columnList = "user_id"), @Index(name = "role_id", columnList = "role_id")})
     private List<Role> roles;
 
 

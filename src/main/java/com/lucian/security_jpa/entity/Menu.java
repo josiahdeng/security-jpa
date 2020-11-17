@@ -16,7 +16,8 @@ public class Menu {
     @JoinTable(name = "menu_role", joinColumns = @JoinColumn(name = "menu_id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id"),
             foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
-            inverseForeignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            inverseForeignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+            indexes = {@Index(name = "menu_id", columnList = "menu_id"), @Index(name = "role_id", columnList = "role_id")})
     private List<Role> roles;
 
     public Integer getId() {
