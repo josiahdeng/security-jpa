@@ -11,9 +11,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    DataSource dataSource;
 
     @Autowired
     UserService userService;
@@ -27,6 +36,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    JdbcTokenRepositoryImpl jdbcTokenRepository() throws SQLException {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        // 如果persistent_login表不存在则新建这张表
+        Connection con = dataSource.getConnection();
+        ResultSet result = con.getMetaData().getTables(null, null, "persistent_logins", null);
+        if (!result.next()){
+            jdbcTokenRepository.setCreateTableOnStartup(true);
+        }
+        return jdbcTokenRepository;
     }
 
     @Override
@@ -48,6 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .permitAll()
+                .and()
+                .rememberMe()
+                .tokenRepository(jdbcTokenRepository())
+                .key("lucian")
                 .and()
                 .csrf()
                 .disable();
